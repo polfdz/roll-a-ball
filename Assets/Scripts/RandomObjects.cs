@@ -4,7 +4,7 @@ using System.Collections;
 public class RandomObjects : MonoBehaviour
 {
     //Game Objects
-    public GameObject ground; //terrain
+    public GameObject ground, ground2, ground3, ground4; //terrain
     public GameObject pickUpToPlace; // GameObject to place
     public GameObject boxTimeToPlace; // GameObject to place
     public GameObject boxWindToPlace;
