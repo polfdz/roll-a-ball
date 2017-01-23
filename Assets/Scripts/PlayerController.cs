@@ -3,9 +3,7 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public GameObject ramp1, ramp2, ramp3, ramp4, ramp5, ramp6, ramp7, ramp8;
-    private int level = 1; //level of the current platform
-
+    public GameObject ramp1, ramp2;
     //Objects
     private Rigidbody rb; //the ball -- private not shown in Unity editor
     public Text countText, winText, timerText, highscoreText; //if public can be access in Unity editor
@@ -15,6 +13,7 @@ public class PlayerController : MonoBehaviour
 
 <<<<<<< HEAD
     //Timers
+<<<<<<< HEAD
     private float colorTimer = 50.0f;
 =======
     // Audio
@@ -36,6 +35,9 @@ public class PlayerController : MonoBehaviour
 	//Timers
     private float colorTimer = 15.0f;
 >>>>>>> e81e8d4720557e3cd32e4aba13535ea5a95d09e1
+=======
+    private float colorTimer = 15.0f;
+>>>>>>> parent of a634908... Platforms commit for pulling
 
     //Counters
     private int count;
@@ -83,6 +85,7 @@ public class PlayerController : MonoBehaviour
 			//Wind force if is active
 			applyWind(2);
 
+<<<<<<< HEAD
 			//ramps
 			checkRamp();		
 		}
@@ -92,6 +95,10 @@ public class PlayerController : MonoBehaviour
         checkPlatform();
 =======
 >>>>>>> e81e8d4720557e3cd32e4aba13535ea5a95d09e1
+=======
+        //ramps
+        checkRamp();
+>>>>>>> parent of a634908... Platforms commit for pulling
 
     }
 
@@ -203,6 +210,7 @@ public class PlayerController : MonoBehaviour
 		}
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     //Platforms and Ramps behavior
     void checkPlatform()
 =======
@@ -210,42 +218,16 @@ public class PlayerController : MonoBehaviour
     //Ramps behavior
     void checkRamp()
 >>>>>>> e81e8d4720557e3cd32e4aba13535ea5a95d09e1
+=======
+    //Ramps behavior
+    void checkRamp()
+>>>>>>> parent of a634908... Platforms commit for pulling
     {
-
-        level = checkLevel();
-
-        switch (level) {
-            case 2:
-                ramp1.SetActive(true);
-                ramp2.SetActive(true);
-                break;
-            case 3:
-                ramp3.SetActive(true);
-                ramp4.SetActive(true);
-                break;
-            case 4:
-                ramp5.SetActive(true);
-                ramp6.SetActive(true);
-                ramp7.SetActive(true);
-                ramp8.SetActive(true);
-                break;
-        }
-
-    }
-    int checkLevel() {
-        if (count > 15)
+        if(count > 4)
         {
-            return level = 4;
+            ramp1.SetActive(true);
         }
-        else if (count > 5)
-        {
-            return level = 3;
 
-        }
-        else if (count > 1) {
-            return level = 2;
-        }
-        return level;
     }
     /*
      * Adds force to the ball 
