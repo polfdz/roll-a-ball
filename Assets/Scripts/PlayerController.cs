@@ -13,12 +13,35 @@ public class PlayerController : MonoBehaviour
     //Other classes for attributes access 
     public RandomObjects randomObjects;
 
+<<<<<<< HEAD
     //Timers
     private float colorTimer = 50.0f;
+=======
+    // Audio
+	public AudioSource audioSrcMain;
+	public AudioSource audioSrcEffects;
+	public AudioSource audioSrcWind;
+
+	public AudioClip gameMusic;
+	public AudioClip timeDangerSound;
+	public AudioClip coinObjectSound;
+	public AudioClip timeObjectSound;
+	public AudioClip windObjectSound;
+	public AudioClip plusObjectSound;
+	public AudioClip windSound;
+	public AudioClip rampSound;
+	public AudioClip wallsSound;
+	public AudioClip gameOverSound;
+
+	//Timers
+    private float colorTimer = 15.0f;
+>>>>>>> e81e8d4720557e3cd32e4aba13535ea5a95d09e1
 
     //Counters
     private int count;
 
+	// GameOver Flag
+	private bool isGameOver;
     //Ball speed
     public float speed, windSpeed; //public will be shown in Unity editor
     public float boxSpeed;
@@ -31,6 +54,7 @@ public class PlayerController : MonoBehaviour
         //ramp1.SetActive(false);
 
         //start game
+		isGameOver = false;
         Time.timeScale = 1;
         rb = GetComponent<Rigidbody>(); //gets ball components
         count = 0;
@@ -38,24 +62,36 @@ public class PlayerController : MonoBehaviour
         winText.text = "";
         timerText.text = "";
         highscoreText.text = "Highscore: " + PlayerPrefs.GetInt("highscore", 0);
-    }
+
+		// Add music track
+		audioSrcMain.clip = gameMusic;
+		audioSrcMain.Play();
+	}
 
     // Update is called once per frame
     void Update()
     {
-        //check if ball falled
-        if (rb.position.y < -10) {
-            GameOver(0);
-        }
+		if (!isGameOver) {
+			//check if ball falled
+			if (rb.position.y < -10) {
+				GameOver(0);
+			}
 
-        //color timer behavior
-        updateColorTimer();
-       
-        //Wind force if is active
-        applyWind(2);
+			//color timer behavior
+			updateColorTimer();
 
+			//Wind force if is active
+			applyWind(2);
+
+			//ramps
+			checkRamp();		
+		}
+
+<<<<<<< HEAD
         //enable other platforms and ramps
         checkPlatform();
+=======
+>>>>>>> e81e8d4720557e3cd32e4aba13535ea5a95d09e1
 
     }
 
@@ -95,30 +131,37 @@ public class PlayerController : MonoBehaviour
                 collider.gameObject.SetActive(false);
                 count++;
                 SetCountText();
+				audioSrcEffects.PlayOneShot(coinObjectSound);
                 break;
-            case "Wall":
+			case "Wall":
                 //Move wall
-                collider.transform.Translate(0.0f, -0.3f, 0.0f);
+				collider.transform.Translate (0.0f, -0.3f, 0.0f);
+				audioSrcEffects.PlayOneShot (wallsSound);
                 break;
             case "Box Time":
                 randomObjects.currentTimeBoxes--;
                 collider.gameObject.SetActive(false);
                 colorTimer += 4;
+				audioSrcEffects.PlayOneShot(timeObjectSound, 0.3f);
                 break;
             case "Box Wind":
                 collider.gameObject.SetActive(false);
                 randomObjects.desactivateWind();
+				audioSrcEffects.PlayOneShot(windObjectSound, 1.0f);
                 break;
             case "Box Ground":
                 collider.gameObject.SetActive(false);
                 randomObjects.resizeGround(0);
+				audioSrcEffects.PlayOneShot(plusObjectSound);            
+			break;
+			case "Ramp":
+				Debug.Log ("RAMP");
+				rb.AddForce (movement * speed * 50);
+				// play ramp sound when ball is y > 1 to ensure it is not just colliding with ramp
+				if (rb.position.y > 1) {
+					audioSrcEffects.PlayOneShot(rampSound);
+				}				            
                 break;
-            case "Ramp":
-                Debug.Log("RAMP");
-                rb.AddForce(movement * speed * 50);
-                break;
-
-
         }
     }
 	 
@@ -151,9 +194,22 @@ public class PlayerController : MonoBehaviour
         {
             GameOver(1);
         }
+
+		// Play alarm sound if less than five seconds
+		if (colorTimer < 5.0f) {
+			if (!audioSrcEffects.isPlaying) {				
+				audioSrcEffects.PlayOneShot (timeDangerSound);
+			}
+		}
     }
+<<<<<<< HEAD
     //Platforms and Ramps behavior
     void checkPlatform()
+=======
+		
+    //Ramps behavior
+    void checkRamp()
+>>>>>>> e81e8d4720557e3cd32e4aba13535ea5a95d09e1
     {
 
         level = checkLevel();
@@ -200,30 +256,38 @@ public class PlayerController : MonoBehaviour
         GameObject wind = randomObjects.getActiveWind();
         float windForce = 0.2f;
         Vector3 movement;
-        if (wind != null) {
-            switch (wind.name) {
-                case "WindZoneW":
-                    movement = new Vector3(windForce, 0.0f, 0.0f);
-                    rb.AddForce(movement * windSpeed * factor);
-                    break;
-                case "WindZoneE":
-                    movement = new Vector3(-windForce, 0.0f, 0.0f);
-                    rb.AddForce(movement * windSpeed * factor);
-                    break;
-                case "WindZoneN":
-                    movement = new Vector3(0.0f, 0.0f, -windForce);
-                    rb.AddForce(movement * windSpeed * factor);
-                    break;
-                case "WindZoneS":
-                    movement = new Vector3(0.0f, 0.0f, windForce);
-                    rb.AddForce(movement * windSpeed * factor);
-                    break;
+		if (wind != null) {
+			playWindSound ();
+			switch (wind.name) {
+			case "WindZoneW":
+				movement = new Vector3 (windForce, 0.0f, 0.0f);
+				rb.AddForce (movement * windSpeed * factor);
+				break;
+			case "WindZoneE":
+				movement = new Vector3 (-windForce, 0.0f, 0.0f);
+				rb.AddForce (movement * windSpeed * factor);
+				break;
+			case "WindZoneN":
+				movement = new Vector3 (0.0f, 0.0f, -windForce);
+				rb.AddForce (movement * windSpeed * factor);
+				break;
+			case "WindZoneS":
+				movement = new Vector3 (0.0f, 0.0f, windForce);
+				rb.AddForce (movement * windSpeed * factor);
+				break;
 
-            }
-        }
+			}
+		} else {
+			audioSrcWind.Stop ();
+		}
 
     }
 
+	void playWindSound() {
+		if (!audioSrcWind.isPlaying) {
+			audioSrcWind.PlayOneShot(windSound);		
+		}
+	}
 
 
     /*
@@ -233,7 +297,7 @@ public class PlayerController : MonoBehaviour
      * 2
      */
     void GameOver(int type)
-    {
+    {		
         switch (type)
         {
             case 0:
@@ -247,14 +311,19 @@ public class PlayerController : MonoBehaviour
                 break;
                 
         }
-
         StoreHighscore(count);
+
+		isGameOver = true;
+		//if (isGameOver) {
+			audioSrcMain.Stop ();
+			audioSrcWind.Stop ();
+			audioSrcEffects.PlayOneShot(gameOverSound);
+		//}
         //Stop app
         Time.timeScale = 0;
     }
 
     void StoreHighscore(int newHighscore) {
-
         int oldHighscore = PlayerPrefs.GetInt("highscore", 0);
         if (newHighscore > oldHighscore) {
             PlayerPrefs.SetInt("highscore", newHighscore);
